@@ -264,6 +264,4 @@ array_one
 #  A B C D
 #a 7 9 3 5
 #b 8 0 4 1
-# Display
-arr
 ```
