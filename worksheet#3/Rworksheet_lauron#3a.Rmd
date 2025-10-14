@@ -9,6 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
 #1
 C_letters <- LETTERS[1:26]
 C_letters
@@ -174,7 +175,7 @@ matrix_two
  
 matrix_r <- matrix_one[2, ]
 matrix_r
-#[1] 2 8
+#[1]  2  5  8 13
  
  
 #2d

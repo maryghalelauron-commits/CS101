@@ -152,7 +152,7 @@ household_data
 #7             Wood
 #8    Semi-concrete
 #9    Semi-concrete
-310        Concrete
+#310        Concrete
 
 #3b
 # Convert Sex into factor
