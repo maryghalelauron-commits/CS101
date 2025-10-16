@@ -196,16 +196,13 @@ female_driver
 #3f
 respondent_siblings<- subset(household_data, Siblings_at_School >= 5)
 respondent_siblings
-# Respondents    Sex Fathers_Occupation Persons_at_Home Siblings_at_School
-#4            4   Male                  3               8                  5
-#9            9 Female                  1              11                  6
-#10          10   Male                  3               6                  6
-#   Types_of_Houses
-#4             Wood
-#9    Semi-concrete
-#10        Concrete
-
-
+#     Respondents Sex  Fathers_Occupation Persons_at_Home  Siblings_at_School  
+#4         	4	      1	      Others          	8	               5	      
+#10	        10	    1	      Others            6	               6
+#Types_of_Houses
+#1
+#3
+#2
 #4 Interpret the graph
 #The graph illustrates the count of tweets from July 14 to July 21, 2020, 
 #categorized by sentiment type (positive, negative, and neutral).
