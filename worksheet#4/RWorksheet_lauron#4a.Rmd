@@ -9,103 +9,42 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 ```{r}
 # Create the data frame
-Shoes_height <- data.frame(
-  Shoe_size = c(6.5, 9.0, 8.5, 8.5, 10.5, 7.0, 9.5, 9.0,
-                13.0, 7.5, 10.5, 8.5, 12.0, 10.5, 13.0, 11.5,
-                8.5, 5.0, 10.0, 6.5, 7.5, 8.5, 10.5, 8.5,
-                10.5, 11.0, 9.0, 13.0),
-  
-  Height = c(66.0, 68.0, 64.5, 65.0, 70.0, 64.0, 70.0, 71.0,
-             72.0, 64.0, 74.5, 67.0, 71.0, 71.0, 77.0, 72.0,
-             59.0, 62.0, 72.0, 66.0, 64.0, 67.0, 73.0, 69.0,
-             72.0, 70.0, 69.0, 70.0)
+shoe_data <- data.frame(
+  Shoe_size = c(6.5, 9.0, 8.5, 8.5, 10.5, 7.0,9.5, 9.0, 13.0, 7.5, 10.5, 8.5, 12.0, 
+      10.5, 13.0, 11.5, 8.5, 5.0, 10.0, 6.5,7.5, 8.5, 10.5, 8.5, 10.5,11.0, 9.0, 13.0),
+  Height = c(66.0, 68.0, 64.5, 65.0, 70.0,64.0,70.0, 71.0, 72.0, 64.0, 74.5, 67.0,
+             71.0, 71.0, 77.0, 72.0, 59.0, 62.0, 72.0, 66.0, 64.0, 67.0, 73.0, 
+             69.0,72.0,70.0,69.0,70.0),
+  Gender = c("F","F","F","F","M","F","F","F","M","F","M","F","M","M","M","M","F","F","M","F",
+             "F","M","M","F","M","M","M","M")
 )
-Shoes_height
-#output
-#Shoe_size Height
-#1        6.5   66.0
-#2        9.0   68.0
-#3        8.5   64.5
-#4        8.5   65.0
-#5       10.5   70.0
-#6        7.0   64.0
-#7        9.5   70.0
-#8        9.0   71.0
-#9       13.0   72.0
-#10       7.5   64.0
-#11      10.5   74.5
-#12       8.5   67.0
-#13      12.0   71.0
-#14      10.5   71.0
-#15      13.0   77.0
-#16      11.5   72.0
-#17       8.5   59.0
-#18       5.0   62.0
-#19      10.0   72.0
-#20       6.5   66.0
-#21       7.5   64.0
-#22       8.5   67.0
-#23      10.5   73.0
-#24       8.5   69.0
-#25      10.5   72.0
-#26      11.0   70.0
-#27       9.0   69.0
-#28      13.0   70.0
+shoe_data
+
+str(shoe_data)
 #decribe the data: The data frame with a vector name Shoes_height has two variables shoe_size and height, you can see that each varible has 28 element each that indicates shoe size and height.
 
-#1b Create subsets for male and female
-Shoes_height$Gender <- c(rep("M", 14), rep("F", 14))
-male_subset <- Shoes_height[Shoes_height$Gender == "M", ]
-female_subset <- Shoes_height[Shoes_height$Gender == "F", ]
 
+#1b Create subsets for male and female
+female_subset <- subset(shoe_data, Gender == "F", select = c(Shoe_size, Height, Gender))
+male_subset <- subset(shoe_data, Gender == "M", select = c(Shoe_size, Height, Gender))
 # Display results
 male_subset
 female_subset
-#male_subset
-#Shoe_size Height Gender
-#1        6.5   66.0      M
-#2        9.0   68.0      M
-#3        8.5   64.5      M
-#4        8.5   65.0      M
-#5       10.5   70.0      M
-#6        7.0   64.0      M
-#7        9.5   70.0      M
-#8        9.0   71.0      M
-#9       13.0   72.0      M
-#10       7.5   64.0      M
-#11      10.5   74.5      M
-#12       8.5   67.0      M
-#13      12.0   71.0      M
-#14      10.5   71.0      M
-# female_subset
-#Shoe_size Height Gender
-#15      13.0     77      F
-#16      11.5     72      F
-#17       8.5     59      F
-#18       5.0     62      F
-#19      10.0     72      F
-#20       6.5     66      F
-#21       7.5     64      F
-#22       8.5     67      F
-#23      10.5     73      F
-#24       8.5     69      F
-#25      10.5     72      F
-#26      11.0     70      F
-#27       9.0     69      F
-#28      13.0     70      F
+
 
 #1c mean of shoe size and height
-mean(Shoes_height$Shoe_size)
-mean(Shoes_height$Height)
-#output
-#[1] 9.410714 - shoe_size
-#[1] 68.57143 - height
+mean(shoe_data$Shoe_size)
+mean(shoe_data$Height)
 
 #1d is there a relationship between shoe size and height
 #Yes there is, because the data shows that mostly the taller their height the longer shoe size but some has unique instances that their height doesn't affect the shoe size.
 
+```
+
+```{r}
 #2
 months <- c("March","April","January","November","January",
 "September","October","September","November","August",
@@ -114,47 +53,36 @@ months <- c("March","April","January","November","January",
 "April")
 factor_months_vector <- factor(months)
 factor_months_vector
-#output
-#[1] March     April     January   November  January   September October   September
-#[9] November  August    January   November  November  February  May       August   
-#[17] July      December  August    August    September November  February  April    
-#11 Levels: April August December February January July March May November ... September
 
+```
+
+```{r}
 #3 Check summary of months and factor_months_vector
 summary(months)
 summary(factor_months_vector)
-#summary(months)
-#  Length     Class      Mode 
-#       24 character character 
-#summary(factor_months_vector)
-#April    August  December  February   January      July     March       May  
-#   2         4         1         2         3         1         1         1        
-# November   October September 
-#     5           1         3 
         
 #interpretation: months vector only gives the length, class and the mode while the factor_months_vector gives the count of each months. Which is are both equally useful for this case because both have different result or value to easily interpret the data.
 
+```
+
+```{r}
 #4
 direction <- c("East", "West", "North")
 factor_direction <- factor(direction)
 factor_direction
 new_order_data <- factor(factor_direction, levels = c("East", "West", "North"))
 print(new_order_data)
-#output
-#[1] East  West  North
-#Levels: East West North
+```
 
+```{r}
 #5
 import_march <- read.table("/cloud/project/import_march.csv", header = TRUE, sep = ",")
 print(import_march)
-#result
-#   Students Strategy.1 Strategy.2 Strategy.3
-#1  Male       8             10         8
-#2             4             8          6
-#3             0             6          4
-#4 Female      14            4          15
-#5             10            2          12
-#6             6             0           9
+
+
+```
+
+```{r}
 
 #6
 num <- as.numeric(readline(prompt = "Select a number from 1 to 50: "))
@@ -167,10 +95,10 @@ if (is.na(num)) {
 } else {
   cat("You selected number:", num, "\n")
 }
-#output
-#Select a number from 1 to 50: 23
-#You selected number: 23 
 
+```
+
+```{r}
 #7
 min_bills <- function(price) {
  
@@ -197,10 +125,9 @@ min_bills <- function(price) {
 price <- sample(seq(50, 5000, 50), 1)
 cat("Price of snack:", price, "\n")
 min_bills(price)
-#output
-#Price of snack: 600 
-#The minimum number of bills needed is: 12 
+```
 
+```{r}
 #8
 #8a
 students <- data.frame(Name = c("Annie", "Thea", "Steve", "Hanna"),
@@ -208,24 +135,13 @@ Grade1 = c(85, 65, 75, 95), Grade2 = c(65, 75, 55, 75),
 Grade3 = c(85, 90, 80, 100), Grade4 = c(100, 90, 85, 90))
 
 print(students)
-#output
-#Name Grade1 Grade2 Grade3 Grade4
-#1  Annie     85     65     85    100
-#2   Thea     65     75     90     90
-#3  Steve     75     55     80     85
-#4  Hanna     95     75    100     90
-
 
 #8b
 for (i in 1:nrow(students)) {
   avg <- (students$Grade1[i] + students$Grade2[i] + students$Grade3[i] + students$Grade4[i]) / 4
   cat(students$Name[i], "'s average grade this semester is", avg, "\n")
 }
-#output
-#Annie 's average grade this semester is 83.75 
-#Thea 's average grade this semester is 80 
-#Steve 's average grade this semester is 73.75 
-#Hanna 's average grade this semester is 90 
+
 
 #8c
 grades_only <- students[, 2:5] 
@@ -236,8 +152,7 @@ for (i in 1:ncol(grades_only)) {
     cat("The", i, "th test was difficult.\n")
   }
 }
-#output
-#The 2th test was difficult.
+
 
 #8d
 for (i in 1:nrow(students)) {
@@ -251,9 +166,7 @@ for (i in 1:nrow(students)) {
     cat(students$Name[i], "'s highest grade this semester is", highest, "\n")
   }
 }
-#output
-#Annie 's highest grade this semester is 100 
-#Hanna 's highest grade this semester is 100 
+
 
 ```
 

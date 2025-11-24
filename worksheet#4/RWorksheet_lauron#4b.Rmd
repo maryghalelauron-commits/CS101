@@ -25,14 +25,6 @@ for (i in 1:5) {
   }
 }
 
-# output
-#print(matrixA)
-#[,1] [,2] [,3] [,4] [,5]
-#[1,]    0    1    2    3    4
-#[2,]    1    0    1    2    3
-#[3,]    2    1    0    1    2
-#[4,]    3    2    1    0    1
-#[5,]    4    3    2    1    0
 
 #2
 
@@ -43,12 +35,6 @@ for (i in 1:5) {
   cat("\n")  
 }
 
-#output
-#"*"
-#"*""*"
-#"*""*""*"
-#"*""*""*""*"
-#"*""*""*""*""*"
 
 #3 fibonacci
 
@@ -90,13 +76,7 @@ if (is.na(start)) {
 shoe_data <- read.csv("shoe_data.csv")
 
 head(shoe_data)
-#Shoe_size Height Gender
-#1       6.5   66.0      F
-#2       9.0   68.0      F
-#3       8.5   64.5      F
-#4       8.5   65.0      F
-#5      10.5   70.0      M
-#6       7.0   64.0      F
+
 
 
 #b Subset for males and females
@@ -108,11 +88,6 @@ female_subset
 # Count observations in each
 nrow(male_subset)
 nrow(female_subset)
-#output
-#nrow(male_data)
-#[1] 14
-# nrow(female_data)
-#[1] 14
 
 
 gender_count <- table(shoe_data$Gender)
@@ -152,22 +127,11 @@ data(iris)
 
 #a Check structure
 str(iris)
-#output
-#data.frame':	150 obs. of  5 variables:
-#$ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
-# $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
-#$ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
-# $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
-#$ Species     : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ..
-# - the output shows the sepal length and sepal width, the the petal length and petal 
-#width, and the species.
 
 #b mean of the sepal.length,sepal.width,petal.length,and petal.width.
 iris_mean <- colMeans(iris[, 1:4])
 iris_mean
-#output
-#Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
-#    5.843333     3.057333     3.758000     1.199333 
+
 
 #c Count species
 species_distribution <- table(iris$Species)
@@ -197,30 +161,7 @@ virginica <- subset(iris, Species == "virginica")
 tail(setosa)
 tail(versicolor)
 tail(virginica)
-#output
-#Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#45          5.1         3.8          1.9         0.4  setosa
-#46          4.8         3.0          1.4         0.3  setosa
-#47          5.1         3.8          1.6         0.2  setosa
-#48          4.6         3.2          1.4         0.2  setosa
-#49          5.3         3.7          1.5         0.2  setosa
-#50          5.0         3.3          1.4         0.2  setosa
-# tail(versicolor)
-#    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-#+95           5.6         2.7          4.2         1.3 versicolor
-#96           5.7         3.0          4.2         1.2 versicolor
-#97           5.7         2.9          4.2         1.3 versicolor
-#98           6.2         2.9          4.3         1.3 versicolor
-#99           5.1         2.5          3.0         1.1 versicolor
-#100          5.7         2.8          4.1         1.3 versicolor
-# tail(virginica)
-#    Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
-#145          6.7         3.3          5.7         2.5 virginica
-#146          6.7         3.0          5.2         2.3 virginica
-#147          6.3         2.5          5.0         1.9 virginica
-#148          6.5         3.0          5.2         2.0 virginica
-#149          6.2         3.4          5.4         2.3 virginica
-#150          5.9         3.0          5.1         1.8 virginica
+
 
 
 #e scatter_plot
@@ -269,9 +210,7 @@ alexa$variation <- trimws(alexa$variation)
 alexa$variation <- gsub("Black Dot", "Black - Dot", alexa$variation)
 alexa$variation <- gsub("White Dot", "White - Dot", alexa$variation)
 alexa$variation
-#output
-#[1] "Black - Dot" "Black - Dot" "Black - Dot" "White Plus"  "White Show"  "White - Dot"
-#[7] "Black Spot"  "Black Plus"  "White Plus"  "White Spot" 
+
 
 
 # Count each variation
@@ -291,16 +230,6 @@ save(variations, file = "variations.RData")
 load("variations.RData")
 variations 
 
-#output
-#variation       n
-#  <chr>       <int>
-#1 Black - Dot     3
-#2 Black Plus      1
-#3 Black Spot      1
-#4 White - Dot     1
-#5 White Plus      2
-#6 White Show      1
-#7 White Spot      1
 
 #C
 barplot(variations$n,
