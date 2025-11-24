@@ -24,7 +24,9 @@ for (i in 1:5) {
     matrixA[i, j] <- abs(i - j)
   }
 }
+```
 
+```{r}
 
 #2
 
@@ -35,7 +37,9 @@ for (i in 1:5) {
   cat("\n")  
 }
 
+```
 
+```{r}
 #3 fibonacci
 
 start <- as.numeric(readline(prompt = "Enter starting number: "))
@@ -68,7 +72,9 @@ if (is.na(start)) {
   
   cat("\nDone!\n")
 }
+```
 
+```{r}
 
 #4
 
@@ -104,7 +110,9 @@ barplot(gender_count,
         legend.text = TRUE,
         args.legend = list(x = "topright", title = "Gender"))
         
-        
+```
+
+```{r}
 # 5
 expenses <- c(Food = 60, Electricity = 10, Savings = 5, Miscellaneous = 25)
 
@@ -119,9 +127,9 @@ pie(expenses,
     clockwise = TRUE)
 
 legend("topright", legend = names(expenses), fill = c("orange", "yellow", "green", "blue"))
-
+```
   
-
+```{r}
 #6 iris dataset
 data(iris)
 
@@ -191,10 +199,10 @@ legend("topright",
 #f. Interpret the result.
 #Setosa species has wider sepal but shorter in length, the versicolor is in between or in average in  sepal width and sepal length, while the virginica has the longest sepal.
 #The clear separation among clusters suggests that Sepal.Length and Sepal.Width can help distinguish species, though there is some overlap between versicolor and virginica.
-
+```
 
   
-
+```{r}
 #7 import alexa.xlsx
 
 library(readxl)
