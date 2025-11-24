@@ -13,205 +13,132 @@ knitr::opts_chunk$set(echo = TRUE)
 #1
 C_letters <- LETTERS[1:26]
 C_letters
-#output
-#[1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R"
-#[19] "S" "T" "U" "V" "W" "X" "Y" "Z"
- 
+
 #small
 s_letters <- letters[1:26]
  
 s_letters
 
-# [1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s"
- 
-#[20] "t" "u" "v" "w" "x" "y" "z"
+
 
 #a first 11 letters
  
 first_eleven <- LETTERS[1:11]
 first_eleven
-#[1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K"
- 
+
 
 #b odd vector
  
 odd_num<-LETTERS[seq(1,26, by=2)]
  
 odd_num
-#[1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K"
- 
+
 
 #c vowels
  
 vowel_letters <- LETTERS[LETTERS%in% c("A","E","I","O","U")]
 vowel_letters
-#[1] "A" "E" "I" "O" "U"
+
  
 #d last lowercase vector
  
 last_five <- letters[22:26]
 last_five
-#[1] "v" "w" "x" "y" "z"
+
  
 #e letter between 15 to 24
 letterfift_twenny <- letters[15:24]
 letterfift_twenny
-#[1] "o" "p" "q" "r" "s" "t" "u" "v" "w" "x"
-
+```
  
+```{r}
 
 #2
 #a
 city <- c("Tuguegarao City"," Manila","Iloilo City","Tacloban","Samal Island", "Davao City")
 city
-#output
-#[1] "Tuguegarao City" " Manila"         "Iloilo City"     "Tacloban"       
-#[5] "Samal Island"    "Davao City"   
- 
+
 #2b
 temp <- c(42, 39, 34, 34, 30,27)
 temp
-#[1] 42 39 34 34 30 27
- 
+
 #2c
 city_temp <- data.frame(city,temp)
 city_temp
-#output
-# city temp
 
-#1 Tuguegarao City   42
- 
-#2          Manila   39
- 
-#3     Iloilo City   34
- 
-#4        Tacloban   34
- 
-#5    Samal Island   30
- 
-#6      Davao City   27
  
 #2d
  
 names(city_temp) <- c("City", "Temperature")
 city_temp
  
-#output
- 
- #City Temperature
- 
-#1 Tuguegarao City          42
- 
-#2          Manila          39
- 
-#3     Iloilo City          34
- 
-#4        Tacloban          34
- 
-#5    Samal Island          30
- 
-#6      Davao City          27
+
  
 #2e
  
 str(city_temp)
-#'data.frame':	6 obs. of  2 variables:
 
- # $ City       : chr  "Tuguegarao City" " Manila" "Iloilo City" "Tacloban" ...
-
-# $ Temperature: num  42 39 34 34 30 27
- 
-# -it separates the two variables by their name and specify the types.
  
 #2f
  
 city_temp[3:4, ]
  
-#output
-	
-#City Temperature
- 
-#3 Iloilo City          34
- 
-#4    Tacloban          34
+
  
 #2g lowest and highest temp
  
 highest_temp_city <-city_temp[which.max(city_temp$Temperature), ]
 highest_temp_city
-#highest temp
-# 1 Tuguegarao City          42
+       
  
 lowest_temp_city <- city_temp[which.min(city_temp$Temperature), ]
 lowest_temp_city
-#Lowest City Temperature
-# 6 Davao City          27
+```
 
+```{r}
 #Matrices
- 
  
 #2a
  
 matrix_one <- matrix(c(1:8, 11:14), ncol=4, nrow = 3)
 matrix_one
-#output
-#[,1] [,2] [,3] [,4]
-#[1,]    1    4    7   12
-#[2,]    2    5    8   13
-#[3,]    3    6   11   14
+
 
 #2b
 
 matrix_two <- matrix_one * 2
 matrix_two
-#output
-#[,1] [,2] [,3] [,4]
-#[1,]    2    8   14   24
-#[2,]    4   10   16   26
-#[3,]    6   12   22   28
 
 
 #2c
  
 matrix_r <- matrix_one[2, ]
 matrix_r
-#[1] 2 5 8 13
+
  
  
 #2d
 matrix_one[1:2, 3:4]
-#[,1] [,2]
-#[1,]    7   12
-#[2,]    8   13
+
 
 #2e
 matrix_one[3, 2:3]
-#[1]  6 11
 
 #2f
 matrix_one[, 4]
-#[1] 12 13 14
-#2g
+
 rownames(matrix_two) <- c("isa", "dalawa", "tatlo")
 colnames(matrix_two) <- c("uno", "dos", "tres", "quatro")
 print(matrix_two)
-#output
-#uno dos tres quatro
-#isa      2   8   14     24
-#dalawa   4  10   16     26
-#tatlo    6  12   22     28
+
 
 #2h
 dim(matrix_one) <- c(6, 2)
 matrix_one
-# [,1] [,2]
-#[1,]    1    7
-#[2,]    2    8
-#[3,]    3   11
-#[4,]    4   12
-#[5,]    5   13
-#[6,]    6   14
 
+```
+ 
+```{r} 
 #Array
 #3a
 values <- c(1, 2, 3, 6, 7, 8, 9, 0, 3, 4, 5, 1)
@@ -219,24 +146,7 @@ values_repeated <- rep(values, 2)
 
 array_one <- array(values_repeated, dim = c(2, 4, 3))
 array_one
-#output
-#, , 1
 
-#     [,1] [,2] [,3] [,4]
-#[1,]    1    3    7    9
-#[2,]    2    6    8    0
-
-#, , 2
-
-#     [,1] [,2] [,3] [,4]
-#[1,]    3    5    1    3
-#[2,]    4    1    2    6
-
-#, , 3
-
-#     [,1] [,2] [,3] [,4]
-#[1,]    7    9    3    5
-#[2,]    8    0    4    1
 
 #3b
 length(dim(array_one))
@@ -245,21 +155,5 @@ length(dim(array_one))
 #3c
 dimnames(array_one) <- list(letters[1:2],LETTERS[1:4],c("1st-Dimensional Array", "2nd-Dimensional Array","3rd-Dimensional Array")    )
 array_one
-#, , 1st-Dimensional Array
 
-#  A B C D
-#a 1 3 7 9
-#b 2 6 8 0
-
-#, , 2nd-Dimensional Array
-
-#  A B C D
-#a 3 5 1 3
-#b 4 1 2 6
-
-#, , 3rd-Dimensional Array
-
-#  A B C D
-#a 7 9 3 5
-#b 8 0 4 1
 ```
