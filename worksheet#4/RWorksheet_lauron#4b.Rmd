@@ -201,90 +201,67 @@ legend("topright",
 #The clear separation among clusters suggests that Sepal.Length and Sepal.Width can help distinguish species, though there is some overlap between versicolor and virginica.
 ```
 
-  
 ```{r}
+
+
 #7 import alexa.xlsx
-
 library(readxl)
-alexa <- read_excel("alexa-file.xlsx")
+library(dplyr)
+alexa <- read_excel("/cloud/project/alexa_file.xlsx")
+alexa
 
-# Show first rows
-head(alexa)
+#a. Rename the white and black variants by using gsub() function.
+alexa$variation <- gsub("Black +", "Black ", alexa$variation)
 
-alexa$variation <- gsub("\\s+", " ", alexa$variation)   
-alexa$variation <- trimws(alexa$variation)            
+alexa$variation <- gsub("White +", "White ", alexa$variation)
 
-#a Rename the variants
-alexa$variation <- gsub("Black Dot", "Black - Dot", alexa$variation)
-alexa$variation <- gsub("White Dot", "White - Dot", alexa$variation)
-alexa$variation
+head(alexa$variation, 10)
 
 
 
-# Count each variation
-install.packages("dplyr")
-library(dplyr)  
+#b. Variations.Rdata
+# b. Count variations and save
+variations <- alexa %>% count(variation)
+variations
 
-variations <- alexa %>%
-  count(variation)
-
-# Display result
-print(variations)
-
-# Save the object to an RData file
 save(variations, file = "variations.RData")
 
-# Load the saved data (example)
-load("variations.RData")
-variations 
-
-
-#C
-barplot(variations$n,
-        names.arg = variations$variation,  
-        main = "Alexa Variations Distribution",  
-        xlab = "Variation Type",                 
-        ylab = "Number of Units",               
-        col = rainbow(nrow(variations)),       
-        las = 2,                              
-        border = "white")                      
-
-
-#d
-
-load("variations.RData")
-
-# Separate Black and White variants
-black <- variations[grep("Black", variations$variation), ]
-white <- variations[grep("White", variations$variation), ]
-
-par(mfrow = c(1, 2), mar = c(5, 5, 4, 2))  
-
-#black
-bar_black <- barplot(black$n,
-                     names.arg = black$variation,
-                     main = "Black Variants",
-                     xlab = "Variant Type",
-                     ylab = "Number of Units",
-                     col = rainbow(nrow(black)), 
-                     ylim = c(0, max(black$n) + 1),
-                     border = "white",
-                     las = 1)  
-
-text(x = bar_black, y = black$n + 0.2, labels = black$n, cex = 0.8, col = "black")
-#white
-bar_white <- barplot(white$n,
-                     names.arg = white$variation,
-                     main = "White Variants",
-                     xlab = "Variant Type",
-                     ylab = "Number of Units",
-                     col = rainbow(nrow(white)), 
-                     ylim = c(0, max(white$n) + 1),
-                     border = "white",
-                     las = 1) 
-
-text(x = bar_white, y = white$n + 0.2, labels = white$n, cex = 0.8, col = "black")
-
-par(mfrow = c(1, 1))
 
 ```
+
+
+```{r}
+#c. From the variations.RData, create a barplot().
+
+barplot(variations$n,
+        names.arg = variations$variation,
+        col = "skyblue",
+        main = "Variation Counts",
+        xlab = "Variation Type",
+        ylab = "Count",
+        las = 2)
+
+
+black <- variations %>% filter(grepl("^Black", variation))
+white <- variations %>% filter(grepl("^White", variation))
+
+# Combine counts into matrix
+bw_matrix <- rbind(black$n, white$n)
+
+#d. Create a barplot() for the black and white variations. Plot it in 1 frame, side by side. Complete the details of the chart.
+
+barplot(bw_matrix,
+        beside = TRUE,
+        names.arg = gsub("Black |White ", "", black$variation),
+        col = c("black", "gray90"),
+        main = "Black vs White Variation Counts",
+        xlab = "Variation Type",
+        ylab = "Count")
+legend("topright",
+       legend = c("Black", "White"),
+       fill = c("black", "gray90"))
+
+
+
+```
+
