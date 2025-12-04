@@ -1,4 +1,4 @@
-"Respondents","Sex","Fathers_Occupation","Persons_at_Home","Siblings_at_School","Types_of_Houses"
+"Respondents","Sex","FathersWork","Persons_Home","studSibling","Housetype"
 1,"Male",1,5,2,"Wood"
 2,"Female",2,7,3,"Concrete"
 3,"Female",3,3,0,"Concrete"

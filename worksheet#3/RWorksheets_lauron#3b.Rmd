@@ -12,45 +12,45 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 #Create a data frame
 
-survey <- data.frame(Respondents = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20),
+personalInfo <- data.frame(Respondents = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20),
 Sex = c(2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2),
-Fathers_Occupation = c(1, 3, 3, 3, 1, 2, 3, 1, 1, 1, 3, 2, 1, 3, 3, 1, 3, 1, 2, 1),
-Persons_at_Home = c(5, 7, 3, 8, 5, 9, 6, 7, 8, 4, 7, 5, 4, 7, 8, 8, 3, 11, 7, 6),
-Siblings_at_School = c(6, 4, 4, 1, 2, 1, 5, 3, 1, 2, 3, 2, 5, 5, 2, 1, 2, 5, 3, 2),
-Types_of_Houses = c(1, 2, 3, 1, 1, 3, 3, 1, 2, 3, 2, 3, 2, 2, 3, 3, 3, 3, 3, 2)
+FathersWork = c(1, 3, 3, 3, 1, 2, 3, 1, 1, 1, 3, 2, 1, 3, 3, 1, 3, 1, 2, 1),
+Persons_Home = c(5, 7, 3, 8, 5, 9, 6, 7, 8, 4, 7, 5, 4, 7, 8, 8, 3, 11, 7, 6),
+studSibling = c(6, 4, 4, 1, 2, 1, 5, 3, 1, 2, 3, 2, 5, 5, 2, 1, 2, 5, 3, 2),
+Housetype = c(1, 2, 3, 1, 1, 3, 3, 1, 2, 3, 2, 3, 2, 2, 3, 3, 3, 3, 3, 2)
 )
-survey 
+personalInfo
 
 #b
-str(survey)
+str(personalInfo)
 
 
-summary(survey)
+summary(personalInfo)
 
 
 #c
-mean_siblings <- mean(survey$Siblings_at_School)
-mean_siblings
+mean_sib <- mean(personalInfo$studSibling)
+mean_sib
 #- no, it's lower than 5
 
 #d
-subset_2rows <- survey[1:2, ]
-subset_2rows
+fst_2rows <- personalInfo[1:2, ]
+fst_2rows
 
 #e
-extract<- survey[c(3,5), c(2,4)]
+extract<- personalInfo[c(3,5), c(2,4)]
 extract
 
 #f
-types_houses <- survey$Types_of_Houses
-types_houses
+Housetype<- personalInfo$Housetype
+Housetype
 
 #g
-maleresp_farmer <- subset(survey, Sex == 1 & Fathers_Occupation == 1)
+maleresp_farmer <- subset(personalInfo, Sex == 1 & FathersWork == 1)
 maleresp_farmer
 
 #h
-femaleresp_siblings <- subset(survey, Sex == 2 & Siblings_at_School >= 5)
+femaleresp_siblings <- subset(personalInfo, Sex == 2 & studSibling>= 5)
 femaleresp_siblings
 ```
 
@@ -73,10 +73,10 @@ print(str(df))
   Respondents = 1:10,
   Sex = c("Male", "Female", "Female", "Male", "Male", "Female", "Female", "Male", 
   "Female", "Male"),
-  Fathers_Occupation = c(1, 2, 3, 3, 1, 2, 2, 3, 1, 3),
-  Persons_at_Home = c(5, 7, 3, 8, 5, 4, 4, 2, 11, 6),
-  Siblings_at_School = c(2, 3, 0, 5, 2, 4, 4, 2, 6, 6),
-  Types_of_Houses = c("Wood", "Concrete", "Concrete", "Wood", "Semi-concrete",
+  FathersWork = c(1, 2, 3, 3, 1, 2, 2, 3, 1, 3),
+ Persons_Home  = c(5, 7, 3, 8, 5, 4, 4, 2, 11, 6),
+ studSibling  = c(2, 3, 0, 5, 2, 4, 4, 2, 6, 6),
+ Housetype  = c("Wood", "Concrete", "Concrete", "Wood", "Semi-concrete",
   "Semi-concrete", "Wood", "Semi-concrete", "Semi-concrete", "Concrete")
 )
 write.csv(household, "HouseholdData.csv", row.names = FALSE)
@@ -92,31 +92,31 @@ labels = c(1, 2))
 household_data$Sex
 
 #3c
-household_data$Types_of_Houses <- factor(
-  household_data$Types_of_Houses,
+household_data$Housetype <- factor(
+  household_data$Housetype,
   levels = c("Wood", "Concrete", "Semi-concrete"),
   labels = c(1, 2, 3)
 )
-household_data$Types_of_Houses
+household_data$Housetype
 
 
 #3d
-household_data$Fathers_Occupation <- factor(
-  household_data$Fathers_Occupation,
+household_data$FathersWork  <- factor(
+  household_data$FathersWork,
   levels = c(1, 2, 3),
   labels = c("Farmer", "Driver", "Others")
 )
 
-household_data$Fathers_Occupation
+household_data$FathersWork 
 
 #3e
-female_driver <- subset(household_data, Sex == "2" & Fathers_Occupation == "Driver")
+female_driver <- subset(household_data, Sex == "2" &  FathersWork  == "Driver")
 female_driver
 
 
 
 #3f
-respondent_siblings<- subset(household_data, Siblings_at_School >= 5)
+respondent_siblings<- subset(household_data, studSibling >= 5)
 respondent_siblings
 ```
 
