@@ -1,0 +1,368 @@
+---
+title: "RWorksheet_lauron#4c.Rmd."
+author: "Mary Ghale C. Lauron"
+date: "2025-12-02"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#(1.) 
+
+#a import a csv file
+
+library(dplyr)
+library(ggplot2)
+data(mpg)
+
+write.csv(mpg, "mpg.csv", row.names = FALSE)
+
+mpgdata <- read.csv("mpg.csv", header = TRUE, stringsAsFactors = FALSE)
+str(mpgdata)
+
+
+#b. variables from mpg dataset are categorical
+#The variables from mpg dataset that are categorical manufacturer, model, trans, #drv, fl, class.
+
+#c. continuous variables
+#These are the continuous variables are year,displ, cty, hwy, cyl.
+
+
+
+#(2.)  manufacturer that has the most models.Model that has the most variations. 
+
+manu_models_vars <- mpgdata %>%
+  group_by(model) %>%
+  summarise(total_manumovars = n()) %>%
+  arrange(desc(total_manumovars))
+
+manu_models_vars
+
+
+#a. Group the manufacturers and find the unique models.
+
+manu_model <- mpgdata %>%
+  group_by(manufacturer) %>%
+  summarise(uniquemodels = n_distinct(model)) %>%
+  arrange(desc(uniquemodels))
+manu_model
+
+
+#OUTPUT:
+# A tibble: 15 × 2
+#manufacturer total_models
+#<chr>               <int>
+#  1 toyota                  6
+#2 chevrolet               4
+#3 dodge                   4
+#4 ford                    4
+#5 volkswagen              4
+#6 audi                    3
+#7 nissan                  3
+#8 hyundai                 2
+#9 subaru                  2
+#10 honda                   1
+#11 jeep                    1
+#12 land rover              1
+#13 lincoln                 1
+#14 mercury                 1
+#15 pontiac                 1
+
+
+#b.  plot() and ggplot(). 
+
+#b1. plot()
+
+plot(as.factor(manu_model$manufacturer),
+     manu_model$uniquemodels,
+     las = 2,
+     main = "Number of Unique Models per Manufacturer",
+     xlab = "Manufacturer",
+     ylab = "Number of Models")
+
+
+
+#b2. ggplot()
+
+ggplot(manu_model, aes(x = reorder(manufacturer, -uniquemodels), y = uniquemodels)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Unique Models per Manufacturer",
+       x = "Manufacturer",
+       y = "Number of Unique Models") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+#(2.) Relationship of the modeland the manufacturer.
+
+#a. What does ggplot(mpg, aes(model, manufacturer)) + geom_point() show?
+
+#The ggplot shows the number of models per manufacturer: on the y axis it shows 
+#that number of models and on the x axix it showss the manufacturer listing a 
+#models in vertical way. The whole graph shows the relationship of models to 
+#manufacturer.
+
+#b. For you, is it useful? If not, how could you modify the data to make it more informative?
+
+#It is already useful but not really an informative as it lacks some key points.
+
+
+#alternatives:
+ggplot(mpgdata, aes(model, manufacturer)) + 
+  geom_count() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Count of Each Model per Manufacturer",
+       x = "Manufacturer",
+       y = "Model")
+
+
+
+#(3.) Plot the model and the year using ggplot() (top 20 observations).
+twenny_obser <- mpgdata[1:20, ]
+
+ggplot(twenny_obser, aes(x = model, y = factor(year))) +
+  geom_point(color = "violet", size = 2) +
+  labs(title = "Model vs Year (Top 20 Observations)",
+       x = "Model",
+       y = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+
+#(4.) Using the pipe (%>%), group the model and get the number of cars per model. 
+
+model_g <- mpgdata %>%
+  group_by(model) %>%
+  summarise(carnum = n()) %>%
+  arrange(desc(carnum))
+
+model_g
+
+#OUTPUT:
+# A tibble: 38 × 2
+#model               number_of_cars
+#<chr>                        <int>
+#  1 caravan 2wd                     11
+#2 ram 1500 pickup 4wd             10
+#3 civic                            9
+#4 dakota pickup 4wd                9
+#5 jetta                            9
+#6 mustang                          9
+#7 a4 quattro                       8
+#8 grand cherokee 4wd               8
+#9 impreza awd                      8
+#10 a4                               7
+
+
+
+#a. Plot using geom_bar() using the top 20 observations only.
+
+twenny_obser <- model_g[1:20, ]
+
+ggplot(twenny_obser, aes(x = reorder(model, -carnum), y = carnum, fill = model)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Top 20 Models by Number of Cars",
+       x = "Model",
+       y = "Number of Cars") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(palette = "Set3")
+
+
+#b. Plot using the geom_bar() + coord_flip()
+ggplot(twenny_obser, aes(x = reorder(model, carnum), y = carnum, fill = model)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Top 20 Models by Number of Cars",
+       x = "Model",
+       y = "Number of Cars") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3")
+
+
+#(5.) Plot the relationship between cyl - number of cylinders and displ - engine displacement using geom_point with aesthetic color = engine displacement. Title should be “Relationship between No. of Cylinders and Engine Displacement”.
+
+ggplot(mpgdata, aes(x = cyl, y = displ, color = displ)) +
+  geom_point(size = 3) +
+  labs(title = "Relationship between No. of Cylinders and Engine Displacement",
+       x = "Number of Cylinders",
+       y = "Engine Displacement (litres)",
+       color = "Displacement") +
+  theme_minimal()
+
+#a. How would you describe its relationship? 
+
+# I would describe its relationship a clear positive relationship between the 
+#number of cylinders and engine displacement. Vehicles with fewer cylinders, such 
+#as 4-cylinder engines, have smaller displacements, typically ranging from about 
+#1 to 3 liters. As the number of cylinders increases to six, engine 
+#displacement also increases, falling around 2.5 to 4 liters. Cars with eight 
+#cylinders have the higher displacements, reaching between 4 to 7 liters.
+
+
+
+#6. Plot the relationship between displ (engine displacement) and hwy(highway miles per gallon). 
+
+ggplot(mpgdata, aes(x = displ, y = hwy, color = cty)) +
+  geom_point(size = 4) +
+  labs(title = "Relationship between Engine Displacement and Highway MPG",
+       x = "Engine Displacement (litres)",
+       y = "Highway Miles per Gallon",
+       color = "City MPG") +
+  theme_minimal()
+
+#Result and why produced such output.
+
+
+# It produced such output beacuse it shows the relationship of  hwy and displ in 
+#numeric value because both are continous. The engine displacement has a higher 
+#hwy in the first dislp and gradually lower.
+
+#6. Import the traffic.csv onto your R environment.
+library(readr)
+traffic <- read_csv("/cloud/project/traffic.csv")
+
+
+#a. How many numbers of observation does it have? What are the variables of the traffic dataset.
+
+nrow(traffic)       
+names(traffic)      
+
+
+#b. subset the traffic dataset into junctions.
+
+traffic_2junc <- traffic[, c("Junction")]
+
+traffic_2junc
+
+
+#c. Plot each junction in a using geom_line().
+library(tidyr)
+
+traffic_junc <- traffic %>%
+  pivot_longer(cols = starts_with("Junction"),
+               names_to = "Junction",
+               values_to = "TrafficFlow")
+
+ggplot(traffic_junc, aes(x = Time, y = TrafficFlow, color = Junction)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(title = "Traffic Flow at Each Junction",
+       x = "Time",
+       y = "Traffic Volume") +
+  theme_minimal()
+
+
+
+
+#7. From alexa_file.xlsx, import it to your environment
+library(readxl)
+
+alexa_file <- read_excel("/cloud/project/alexa_file.xlsx")
+
+
+#a. alexa_file observation  and  number of columns.
+
+alexa_obs <- nrow(alexa_file)
+
+alexa_col <- ncol(alexa_file)
+
+alexa_obs
+alexa_col
+
+
+#b. group the variations and get the total of each variations.
+
+varg_each <- alexa_file %>%
+  group_by(variation) %>%     
+  summarise(total = n())      
+
+varg_each
+
+#OUTPUT:
+## A tibble: 16 × 2
+#variation                    total
+#<chr>                        <int>
+#  1 Black                          261
+#2 Black  Dot                     516
+#3 Black  Plus                    270
+#4 Black  Show                    265
+#5 Black  Spot                    241
+#6 Charcoal Fabric                430
+#7 Configuration: Fire TV Stick   350
+#8 Heather Gray Fabric            157
+#9 Oak Finish                      14
+#10 Sandstone Fabric                90
+#11 Walnut Finish                    9
+#12 White                           91
+#13 White  Dot                     184
+#14 White  Plus                     78
+#15 White  Show                     85
+#16 White  Spot                    109
+
+
+#c. Plot the variations using the ggplot() function.
+
+ggplot(varg_each, aes(x = variation, y = total, fill = variation)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Total Count of Each Alexa Variation",
+    x = "Variation",
+    y = "Total Count"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+
+#d. Plot a geom_line() with the date and the number of verified reviews. 
+
+alexa_file$date <- as.Date(alexa_file$date, format="%Y-%m-%d")
+
+alexa_file$verifiedreviews <- as.numeric(gsub(",", "", alexa_file$verified_reviews))
+
+sum(is.na(alexa_file$verifiedreviews))
+
+veri_reviews <- alexa_file %>%
+  group_by(date) %>%
+  summarise(totalverified = sum(verifiedreviews, na.rm = TRUE))
+
+ggplot(veri_reviews, aes(x = date, y = totalverified)) +
+  geom_line(color = "violet", linewidth = 1) +
+  labs(
+    title = "Number of Verified Reviews Over Time",
+    x = "Date",
+    y = "Total Verified Reviews"
+  ) +
+  theme_minimal()
+
+
+#e.relationship of variations and ratings and who got the most highest in rating.
+
+high_rating <- alexa_file %>%
+  group_by(variation) %>%
+  summarise(avg_rating = mean(rating, na.rm = TRUE)) %>%
+  arrange(desc(avg_rating))  
+
+high_rating
+
+ggplot(high_rating, aes(x = variation, y = avg_rating, fill = variation)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Average Rating by Alexa Variation",
+    x = "Variation",
+    y = "Average Rating"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#The variation that got the most highest in rating is the  Walnut Finish as it has the highest bar on the graph.
+
+```
