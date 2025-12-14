@@ -1,0 +1,704 @@
+---
+title: "Group Lauron - A SURVEY ON TIME ON STUDYING AND STUDY HABITIS AMONG STUDENTS OF ISAT U (LAPAZ)"
+author: "Lauron,Apuli,Sabando,Tanagon"
+date: "2025-12-11"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+#A SURVEY ON TIME ON STUDYING AND STUDY HABITIS AMONG STUDENTS OF ISAT U (LAPAZ) 
+
+
+#Import the responses in Google Form Data in CSV  to analyze it.
+
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+
+surveyData <- read.csv("/cloud/project/Group_Lauron.csv")
+
+#The data set contains information about the personal information, 
+#time allocatin for studying  and questions of the studying habits of -
+#ISAT U students. Each column represents the questions to determine it.
+
+head(surveyData)
+
+#To inspect the dataset, the View() and head() functions were used.The View() 
+#function allows examination of the entire dataset from Group_Lauron.csv, which 
+#contains the respondents’ timestamps, demographic information (such as full name, 
+#age, college, and gender), and responses to questions related to their study 
+#habits. Meanwhile, the head() function displays the first six rows of the
+#dataset, providing a quick overview of its structure and contents.
+
+#In checking the structure, dimensions, and Class of the data.
+
+str(surveyData)   
+class(surveyData)   #to know the data type of the data.
+dim(surveyData)     #to know the dimensions.
+
+#In using str() and class(), We able to identify which class our data belong, 
+#in str() we are able to identified what are the integer and the character on 
+#the answers, in the data type, how many observation and variables.
+
+
+#Converted the blank lines in our survey data to NA to make it clearer and complete,
+#because we made the name question optional and a lot chose not to put their names.
+
+surveyData[surveyData == ""] <- NA
+
+#preview of the last 6 rows of data with NA.
+tail(surveyData)
+
+#preview of  the first 6 rows of data blank replaced with NA
+head(surveyData)
+
+#The respondents were grouped by age, gender, and college to analyze differences
+#among them. First, the number of respondents in each group was counted.
+
+surveycat <- surveyData %>%
+group_by(AGE., GENDER, COLLEGE) %>%
+summarise(Count = n(), .groups = 'drop')
+
+surveycat
+
+#We aimed to identify the age, gender, and college groups with the highest and 
+#lowest number of respondents.
+
+#most respondent based on AGC
+most_respondents <- surveycat %>%
+filter(Count == max(Count))
+
+most_respondents
+
+#least respondent based on AGC
+least_respondents <- surveycat %>%
+filter(Count == min(Count))
+
+least_respondents
+
+#The results showed that most respondents were 19-year-old female students from
+#the College of CCI. 
+#The least number of respondents was shared among ten groups with different 
+#combinations of age, gender, and college.
+
+#We grouped the responses by gender, age, college, and all respondents based on 
+#time allocation for studying to better understand and analyze the data. 
+#This allowed us to identify which groups spent the most time studying based on 
+#gender, age, and college.
+
+#We also created table and bar graphs of the responses to determine the most 
+#and least common study time allocations among respondents based on it.
+#But first we arrange the Time Allocation logically for a better graph outcomes.
+
+surveyData$Time.Allocation.for.Studying <- factor(
+  surveyData$Time.Allocation.for.Studying,
+levels = c("less than 30 minutes","30 minutes","1 hour","1 hour and 30 minutes",
+           "1 hour, 2 hours and above", "2 hours and above"),
+  ordered = TRUE
+)
+
+#Table for Time Allocation for studying by GENDER.
+table(surveyData$GENDER, surveyData$Time.Allocation.for.Studying)
+
+#Bar Graphs for Gender
+study_gender <- surveyData %>%
+group_by(GENDER, Time.Allocation.for.Studying) %>%
+summarise(count = n(), .groups = "drop")
+
+study_gender
+
+ggplot(study_gender,
+       aes(x = Time.Allocation.for.Studying, y = count, fill = GENDER)) +
+  geom_col(position = "dodge", width = 0.7) +
+  labs(
+    title = "Study Time Allocation by Gender",
+    x = "Daily Study Time",
+    y = "Number of Students",
+    fill = "Gender"
+  ) +
+  theme_minimal(base_size = 13) +   
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+#The result indicate that male respondents reported have longer studying 
+#durations compared to female respondents.
+#Male students showed a peak at one hour of study time, while female students 
+#reported studying for 30 minutes.Their peak shows is quite the opposite on the 
+#most common lowest studying time for both gender. While, prefer not to say 
+#is on less than 30 minutes spent on studying. 
+#This shows that time spent on studying varied based on gender of the respondents.
+
+
+
+
+#Time Allocation for studying by Colleges.(Table)
+table(surveyData$COLLEGE, surveyData$Time.Allocation.for.Studying)
+
+#Bar Graph for College.
+study_college <- surveyData %>%
+group_by(COLLEGE, Time.Allocation.for.Studying) %>%
+summarise(count = n())
+
+study_college
+
+ggplot(study_college,
+       aes(x = Time.Allocation.for.Studying, y = count, fill = COLLEGE)) +
+  geom_col(position = "dodge", width = 0.7) +
+  geom_text(aes(label = count), position = position_dodge(width = 0.7), 
+            vjust = -0.3) +
+  labs(
+    title = "Study Time Allocation by College",
+    x = "Daily Study Time",
+    y = "Number of Respondents",
+    fill = "College"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#This shows that the CCI spent longest time on studying than other colleges 
+#with the 2 hours and above, followed by the CEA,CIT,and CAS. While the COE 
+#peak is on 30 minutes and 1 hour which is also their lowest. For the 30 minutes
+#and 1 hour categories, the respondents are more evenly distributed across the 
+#colleges. If we rank them based on the respondents spent on studying, 
+#it would be CCI-CEA-CIT-CAS-COE.
+
+
+#Table for Time Allocation for studying by AGE.
+table(surveyData$AGE., surveyData$Time.Allocation.for.Studying)
+
+#Bar Graph for AGE.
+time_age <- surveyData %>%
+group_by(AGE., Time.Allocation.for.Studying) %>%
+summarise(count = n())
+
+time_age
+
+
+time_age$AGE. <- factor(time_age$AGE.)
+
+ggplot(time_age,
+       aes(x = Time.Allocation.for.Studying, y = count, fill = AGE.)) +
+  geom_col(width = 0.7) +  # simple single bars
+  scale_fill_brewer(palette = "Set3") +  
+  labs(
+    title = "Study Time Allocation by Age",
+    x = "Daily Study Time",
+    y = "Number of Respondents",
+    fill = "Age"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+#The graph shows that most of age 19 study the longest followed by the 20 and 
+#22. For 30 minutes, all ages appear to spent time to study with that time, 
+#and also in the lowest.
+
+
+
+#Time Allocation for studying of  all respondents.
+table(surveyData$Time.Allocation.for.Studying)
+
+#Bar plot
+
+study_counts <- surveyData %>%
+  group_by(Time.Allocation.for.Studying) %>%
+  summarise(count = n()) 
+
+study_counts
+  
+ggplot(study_counts, aes(x = Time.Allocation.for.Studying, y = count)) +
+  geom_col(fill = "steelblue", width = 0.6) +
+  geom_text(aes(label = count), vjust = 0.3) +
+  labs(
+    title = "Study Time Allocation of Respondents",
+    x = "Daily Study Time",
+    y = "Number of Respondents"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+#Most respondent chosen 30 minutes and 1 hour of the time allocated for studying.
+#Followed by 2 hours and above, and 1 hour, 2 hour and above at the lowest 
+#chosen time.
+
+#===================================================================================
+#====================================================================================
+
+#Analyzing 10 question about study habits.
+
+#We rename the column names first for it to be easier to analyze.
+
+#checking column names.
+
+colnames(surveyData)
+
+#Renaming
+
+surveyData <- surveyData %>%
+  rename(ques1 = "X1...I.allocate.time.for.studying.at.least.30.minutes.a.day.",
+         ques2 = "X2...I.take.notes.every.lesson.",                             
+         ques3 = "X3...I.do.an.advanced.study" ,                                
+         ques4 = "X4...I.tend.to.listen.to.music.while.studying",               
+         ques5 = "X5...I.prefer.to.review.by.group.rather.than.alone",          
+         ques6 = "X6...I.create.schedule.and.follow.it.regularly.",             
+         ques7 = "X7..I.use.gadgets.Laptops..Cellphone..IPad..when.studying.",  
+         ques8 = "X8..I.avoid.distraction.phone..social.media..while.studying.",
+         ques9 = "X9...I.take.short.breaks.during.long.study.session.",         
+        ques10 = "X10...I.prefer.studying.alone"  )
+
+
+# Q1: I.allocate.time.for.studying.at.least.30.minutes.a.day
+# ==========================================================
+#Shows frequency and Percentage.
+
+freq_q1 <- surveyData %>%
+  count(ques1) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques1, Frequency = n)
+
+# View table
+freq_q1
+
+q1 <- surveyData %>%
+  group_by(ques1) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q1, aes(x = factor(ques1), y = Count)) +
+  geom_col(fill = "skyblue") +
+  geom_text(aes(label = Count), vjust = -0.3) +
+  labs(
+    title = "Allocating at least 30 Minutes per Day for Studying",
+    x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+    y = "Number of Respondents"
+  ) +
+  theme_minimal()
+
+#INTERPRETATION
+
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students do not allocate at least 30 minutes for
+    studying daily.\n")
+cat("2 = Disagree: Some students rarely allocate 30 minutes for studying 
+    daily.\n")
+cat("3 = Neutral: Some students occasionally allocate 30 minutes for studying 
+    daily.\n")
+cat("4 = Agree: Many students often allocate 30 minutes for studying daily.\n")
+cat("5 = Strongly Agree: Several students almost always allocate 30 minutes for 
+    studying daily.\n") 
+
+
+
+# Q2: I.take.notes.every.lesson
+# ===================================================================================
+##Shows frequency and Percentage.
+
+freq_q2 <- surveyData %>%
+  count(ques2) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques2, Frequency = n)
+
+# View table
+freq_q2
+
+
+q2 <- surveyData %>%
+  group_by(ques2) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q2, aes(x = factor(ques2), y = Count)) +
+  geom_col(fill = "blue") +
+  geom_text(aes(label = Count), vjust = -0.3) +
+  labs(
+    title = "Taking Notes Every Lesson",
+    x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+    y = "Number of Respondents"
+  ) +
+  theme_minimal()
+
+# Interpretation
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students never take notes.\n")
+cat("2 = Disagree: Some students rarely take notes.\n")
+cat("3 = Neutral: Some students occasionally take notes.\n")
+cat("4 = Agree: Many students usually take notes.\n")
+cat("5 = Strongly Agree: Several students always take notes.\n")
+
+
+
+# Q3: I.do.an.advanced.study
+# ============================================================
+##Shows frequency and Percentage.
+
+freq_q3 <- surveyData %>%
+  count(ques3) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques3, Frequency = n)
+
+# View table
+freq_q3
+
+
+q3 <- surveyData %>%
+  group_by(ques3) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q3, aes(x = factor(ques3), y = Count)) +
+  geom_col(fill = "pink") +
+  geom_text(aes(label = Count), vjust = -0.3) +
+  labs(
+    title = "Doing Advanced Study",
+    x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+    y = "Number of Respondents"
+  ) +
+  theme_minimal()
+
+#Interpretation
+
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students never do advanced study.\n")
+cat("2 = Disagree: Some students rarely engage in advanced study.\n")
+cat("3 = Neutral: Some students occasionally do advanced study.\n")
+cat("4 = Agree: Many students often engage in advanced study.\n")
+cat("5 = Strongly Agree: Several students always do advanced study.\n") 
+
+
+#Q4 .I.tend.to.listen.to.music.while.studying
+#===================================================================================
+#Shows frequency and Percentage.
+
+freq_q4 <- surveyData %>%
+  count(ques4) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques4, Frequency = n)
+
+# View table
+freq_q4
+
+q4 <- surveyData %>%
+  group_by(ques4) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q4, aes(x = factor(ques4), y = Count)) +
+  geom_col(fill = "blue") +
+  geom_text(aes(label = Count), vjust = -0.3) +
+  labs(
+    title = "Listening to Music While Studying",
+    x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+    y = "Number of Respondents"
+  ) +
+  theme_minimal()
+
+# Interpretation
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students never listen to music while 
+    studying.\n")
+cat("2 = Disagree: Some students rarely listen to music while studying.\n")
+cat("3 = Neutral: Some students occasionally listen to music while studying.\n")
+cat("4 = Agree: Many students often listen to music while studying.\n")
+cat("5 = Strongly Agree: Several students almost always listen to music while 
+    studying.\n")
+
+
+
+
+# Q5: I.prefer.to.review.by.group.rather.than.alone
+#======================================================================================
+##Shows frequency and Percentage.
+
+  freq_q5 <- surveyData %>%
+  count(ques5) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques5, Frequency = n)
+
+# View table
+freq_q5
+
+
+   q5 <- surveyData %>%
+  group_by(ques5) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q5, aes(x = factor(ques5), y = Count)) +
+  geom_col(fill = "salmon") +
+  geom_text(aes(label = Count), vjust = -0.5) +
+  labs(title = "Preference for Group Study",
+       x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+       y = "Number of Respondents") +
+  theme_minimal()
+
+# Interpretation
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students strongly dislike group study.\n")
+cat("2 = Disagree: Some students prefer studying alone more often.\n")
+cat("3 = Neutral: Some students are indifferent about group study.\n")
+cat("4 = Agree: Many students like studying in groups.\n")
+cat("5 = Strongly Agree: Several students strongly prefer group study.\n") 
+
+#Mostly of the respondents listen to music while studying with the strongly agree.
+
+
+# Q6 I.create.schedule.and.follow.it.regularly
+#===========================================================================================
+##Shows frequency and Percentage.
+
+  freq_q6 <- surveyData %>%
+  count(ques6) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques6, Frequency = n)
+
+# View table
+freq_q6
+
+
+q6 <- surveyData %>%
+  group_by(ques6) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q6, aes(x = factor(ques6), y = Count)) +
+  geom_col(fill = "lightgreen") +
+  labs(title = "Creating and Following a Study Schedule",
+       x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+       y = "Number of Respondents") +
+  theme_minimal()
+# Interpretation
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students never make a study schedule.\n")
+cat("2 = Disagree: Some students rarely follow a study schedule.\n")
+cat("3 = Neutral: Some students occasionally create/follow schedules.\n")
+cat("4 = Agree: Many students regularly create and follow schedules.\n")
+cat("5 = Strongly Agree: Several students always follow a planned schedule.\n")
+
+
+
+# Q7: I.use.gadgets.Laptops..Cellphone..IPad..when.studying
+#==============================================================================================
+##Shows frequency and Percentage. 
+
+ freq_q7 <- surveyData %>%
+  count(ques7) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques7, Frequency = n)
+
+# View table
+freq_q7
+
+
+q7 <- surveyData %>%
+  group_by(ques7) %>%
+  summarise(Count = n(), .groups = "drop") 
+
+ggplot(q7, aes(x = factor(ques7), y = Count)) +
+  geom_col(fill = "violet") +
+  labs(title = "Use of Gadgets While Studying",
+       x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+       y = "Number of Respondents") +
+  theme_minimal()
+
+
+# Interpretation
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students never use gadgets while studying.\n")
+cat("2 = Disagree: Some students rarely use gadgets while studying.\n")
+cat("3 = Neutral: Some students sometimes use gadgets while studying.\n")
+cat("4 = Agree: Many students often use gadgets while studying.\n")
+cat("5 = Strongly Agree: Several students almost always use gadgets while 
+    studying.\n")
+
+
+
+# Q8: I.avoid.distraction.phone..social.media..while.studying.
+# ==============================================================================
+##Shows frequency and Percentage.
+
+  freq_q8 <- surveyData %>%
+  count(ques8) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques8, Frequency = n)
+
+# View table
+freq_q8
+
+
+q8 <- surveyData %>%
+  group_by(ques8) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q8, aes(x = factor(ques8), y = Count)) +
+  geom_col(fill = "steelblue") +
+  geom_text(aes(label = Count), vjust = -0.3) +
+  labs(
+    title = "Avoiding Distractions (Phone/Social Media) While Studying",
+    x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+    y = "Number of Respondents"
+  ) +
+  theme_minimal()
+
+# Interpretation (tailored to q8)
+# --------------------------
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students do not avoid phone/social media 
+    distractions while studying.\n")
+cat("2 = Disagree: Some students rarely avoid phone/social media distractions 
+    while studying.\n")
+cat("3 = Neutral: Some students occasionally avoid phone/social media 
+    distractions while studying.\n")
+cat("4 = Agree: Many students often avoid phone/social media distractions 
+    while studying.\n")
+cat("5 = Strongly Agree: Several students almost always avoid phone/social 
+    media distractions while studying.\n")
+
+
+# Q9: I.take.short.breaks.during.long.study.session.
+#=======================================================
+##Shows frequency and Percentage.
+
+freq_q9 <- surveyData %>%
+  count(ques9) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques9, Frequency = n)
+
+# View table
+freq_q9
+
+
+   q9 <- surveyData %>%
+  group_by(ques9) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q9, aes(x = factor(ques9), y = Count)) +
+  geom_col(fill = "purple") +
+  geom_text(aes(label = Count), vjust = -0.3) +
+  labs(
+    title = "Taking Short Breaks During Long Study Sessions",
+    x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+    y = "Number of Respondents"
+  ) +
+  theme_minimal()
+
+# Interpretation
+
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students never take short breaks
+    during long study sessions.\n")
+cat("2 = Disagree: Some students rarely take short breaks during 
+    long study sessions.\n")
+cat("3 = Neutral: Some students occasionally take short breaks 
+    during long study sessions.\n")
+cat("4 = Agree: Many students often take short breaks during 
+    long study sessions.\n")
+cat("5 = Strongly Agree: Several students almost always take 
+    short breaks during long study sessions.\n\n")
+
+
+# Q10: 
+#==================================================================================================
+##Shows frequency and Percentage.
+
+freq_q10 <- surveyData %>%
+  count(ques10) %>%
+  mutate(Percentage = round(n / sum(n) * 100, 2)) %>%
+  rename(Response = ques10, Frequency = n)
+
+# View table
+freq_q10
+
+q10 <- surveyData %>%
+  group_by(ques10) %>%
+  summarise(Count = n(), .groups = "drop")
+
+ggplot(q10, aes(x = factor(ques10), y = Count)) +
+  geom_col(fill = "skyblue") +
+  geom_text(aes(label = Count), vjust = -0.3) +
+  labs(
+    title = "Preferring to Study Alone",
+    x = "Likert Scale (1 = Strongly Disagree, 5 = Strongly Agree)",
+    y = "Number of Respondents"
+  ) +
+  theme_minimal()
+
+# Interpretation
+
+cat("Interpretation:\n")
+cat("1 = Strongly Disagree: Few students never prefer studying alone.\n")
+cat("2 = Disagree: Some students rarely prefer studying alone.\n")
+cat("3 = Neutral: Some students occasionally prefer studying alone.\n")
+cat("4 = Agree: Many students often prefer studying alone.\n")
+cat("5 = Strongly Agree: Several students almost always prefer studying alone.\n")
+
+#Getting the mean, median and sd of 10 question regarding to study habits.
+
+# Convert Likert questions to numeric
+likert_cols <- paste0("ques", 1:10)
+surveyData[likert_cols] <- lapply(surveyData[likert_cols], 
+                              function(x) as.numeric(as.character(x)))
+
+study_habits <- surveyData %>%
+  select(all_of(likert_cols)) %>%
+  summarise(across(everything(), list(mean = mean, median = median, sd = sd),
+                   na.rm = TRUE))
+
+study_habits_table <- study_habits %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = c("Question", "Statistic"),
+    names_sep = "_",
+    values_to = "Value"
+  ) %>%
+  pivot_wider(names_from = Statistic, values_from = Value)
+
+study_habits_table
+
+#CONCLUSION:
+#INTERPRETATION ON QUESTIONS:
+
+#1 Students sometimes allocate 30+ minutes; the typical student is 
+#neutral-to-agree. Majority allocate some study time, but not consistently daily.
+#2 Note-taking is a moderate habit; some students do it 
+#more consistently than others.
+#3 Advanced study is not a strong habit; many students may need 
+#encouragement to explore challenging topics.
+#4 Students often listen to music while studying.
+#5 Some prefer group work while others prefer studying alone.
+#6 Students do not consistently follow a schedule 
+#Time management and planning could be improved.Prefer independent study and 
+#often take short breaks to maintain focus.
+#7 Technology is heavily integrated into their study routines.
+#8 Some students manage distractions, others do not.
+#9 Students often take breaks during long study sessions.
+#10 Independent study is a dominant preference.
+
+#OVERALL:
+#Strong habits:
+#Music while studying (Q4), using gadgets (Q7), taking breaks (Q9), 
+#studying alone (Q10) → widely practiced.
+#Moderate Habits:
+#Allocating daily study time (Q1), taking notes (Q2), group study (Q5),
+#avoiding distractions (Q8) → practiced sometimes, not consistently.
+#Weak Habit:
+#Creating and following a study schedule (Q6) → students do not
+#consistently plan their study time.
+#Advanced study (Q3) → students rarely go beyond regular study material.
+
+#GENERAL CONCLUSIONS:
+#Students at ISAT U (La Paz) generally:
+#Rely heavily on gadgets and music while studying.
+#Prefer independent study and often take short breaks to maintain focus.
+#Are moderately consistent in allocating study time and note-taking, 
+#but planning and advanced study habits are weaker.
+#Group study and avoiding distractions show high variability, reflecting 
+#individual differences in study style.
+
+#Recommendation: Encourage structured study plans, advanced study practices, 
+#and focus strategies to further improve students’ study effectiveness.
+
+
+
+
+```
