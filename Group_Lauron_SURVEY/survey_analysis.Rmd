@@ -22,7 +22,7 @@ library(tidyr)
 library(ggplot2)
 
 
-surveyData <- read.csv("/cloud/project/Group_Lauron.csv")
+surveyData <- read.csv("/cloud/project/Group_Lauron_SURVEY/Group_Lauron.csv")
 
 #The data set contains information about the personal information, 
 #time allocatin for studying  and questions of the studying habits of -
@@ -196,9 +196,13 @@ ggplot(time_age,
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-#The graph shows that most of age 19 study the longest followed by the 20 and 
-#22. For 30 minutes, all ages appear to spent time to study with that time, 
-#and also in the lowest.
+#The analysis of study time allocation by age reveals differences in study
+#duration among students. Most respondents aged 19 reported the longest study 
+#time, followed by those aged 20 and 22. This suggests that students in these 
+#age groups tend to study longer. For the 30-minute study
+#category, students from all age groups are represented, indicating that shorter
+#study durations are common regardless of age. However, this category also 
+#reflects the lowest study time across all age groups.
 
 
 
@@ -227,6 +231,155 @@ ggplot(study_counts, aes(x = Time.Allocation.for.Studying, y = count)) +
 #Most respondent chosen 30 minutes and 1 hour of the time allocated for studying.
 #Followed by 2 hours and above, and 1 hour, 2 hour and above at the lowest 
 #chosen time.
+
+#=================================================================================
+#===============================================================================
+
+
+#Using the same analysis for how many times the respondents studying per week
+#based on Gender,Age, and College.
+
+
+surveyData$How.many.study.sessions.do.you.usually.have.in.a.week <- factor(
+  surveyData$How.many.study.sessions.do.you.usually.have.in.a.week,
+  levels = c("1-2 times","3-4 times","5 or more times"),
+  ordered = TRUE
+)
+
+
+#Table for Study Times per Week by GENDER.
+
+table(
+  surveyData$GENDER,
+  surveyData$How.many.study.sessions.do.you.usually.have.in.a.week
+)
+
+
+#Bar Graphs for Gender
+session_gender <- surveyData %>%
+  group_by(GENDER, How.many.study.sessions.do.you.usually.have.in.a.week) %>%
+  summarise(count = n(), .groups = "drop")
+
+session_gender
+
+ggplot(session_gender,
+       aes(x = How.many.study.sessions.do.you.usually.have.in.a.week, 
+           y = count, fill = GENDER)) +
+  geom_col(position = "dodge", width = 0.7) +
+  labs(
+    title = "Study Session Per Week",
+    x = "Study Session Frequency",
+    y = "Number of Students",
+    fill = "Gender"
+  ) +
+  theme_minimal(base_size = 13) +   
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+#The analysis of study sessions per week by gender shows variations in students’
+#study habits. Most students reported having 1–2 study sessions per week, 
+#with slight gap between male and female respondents, and to prefer not to say. 
+#Fewer students reported studying 3–4 times per week, while a smaller proportion
+#indicated having 5 or more study sessions.
+
+#Table for study session by colleges.
+
+
+table(
+  surveyData$COLLEGE,
+  surveyData$How.many.study.sessions.do.you.usually.have.in.a.week
+)
+
+#Bar Graph for College
+
+session_college <- surveyData %>%
+  group_by(COLLEGE, How.many.study.sessions.do.you.usually.have.in.a.week) %>%
+  summarise(count = n(), .groups = "drop")
+
+session_college
+
+ggplot(session_college,
+       aes(x = How.many.study.sessions.do.you.usually.have.in.a.week,
+           y = count,
+           fill = COLLEGE)) +
+  geom_col(position = "dodge", width = 0.7) +
+  labs(
+    title = "Study Sessions per Week by College",
+    x = "Study Sessions per Week",
+    y = "Number of Students",
+    fill = "College"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#The analysis of study time per week of colleges is that all of the colleges 
+#studying 1-2 times per week just slighty higher on 3-4 times per week. It also
+#indicates that only respondent from CAS choose 5 or more times.
+
+#Table for study session by age
+
+table(
+  surveyData$AGE.,
+  surveyData$How.many.study.sessions.do.you.usually.have.in.a.week
+)
+
+#Graph for study session by colleges.
+
+session_age <- surveyData %>%
+  group_by(AGE., How.many.study.sessions.do.you.usually.have.in.a.week) %>%
+  summarise(count = n(), .groups = "drop")
+
+session_age
+
+ggplot(session_age,
+       aes(x = How.many.study.sessions.do.you.usually.have.in.a.week,
+           y = count,
+           fill = AGE.)) +
+  geom_col(position = "dodge", width = 0.7) +
+  labs(
+    title = "Study Sessions per Week by Age",
+    x = "Study Sessions per Week",
+    y = "Number of Students",
+    fill = "Age"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Even based on age, 1-2 times per week dominates choose by almost all ages 
+#other than 18, which only choose 5 or more times and only 20 and 22 choose 
+  #studying 3-4 times per week.
+
+#table for all respondents.
+
+table(surveyData$How.many.study.sessions.do.you.usually.have.in.a.week)
+
+#Bar Graph for study session of all respondents.
+
+session_all <- surveyData %>%
+  group_by(How.many.study.sessions.do.you.usually.have.in.a.week) %>%
+  summarise(count = n(), .groups = "drop")
+session_all
+
+ggplot(session_all,
+       aes(x = How.many.study.sessions.do.you.usually.have.in.a.week,
+           y = count)) +
+  geom_col(width = 0.6, fill = "steelblue") +
+  geom_text(aes(label = count), vjust = -0.3) +
+  labs(
+    title = "Study Sessions per Week of All Respondents",
+    x = "Study Sessions per Week",
+    y = "Number of Students"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+##Based on all respondents, 35 chose 1–2 study sessions per week, 15 reported
+#3–4 sessions, and only 1 reported 5 or more sessions. Therefore, 1–2 study
+#sessions per week is the most common study pattern among the respondents,
+#indicating a preference for limited but consistent study sessions.
+
+
+
 
 #===================================================================================
 #====================================================================================
