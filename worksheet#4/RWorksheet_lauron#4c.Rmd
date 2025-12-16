@@ -172,7 +172,7 @@ ggplot(twenny_obser, aes(x = reorder(model, -carnum), y = carnum, fill = model))
        y = "Number of Cars") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_brewer(palette = "Set3")
+  scale_fill_viridis_d()
 
 
 #b. Plot using the geom_bar() + coord_flip()
@@ -183,7 +183,7 @@ ggplot(twenny_obser, aes(x = reorder(model, carnum), y = carnum, fill = model)) 
        x = "Model",
        y = "Number of Cars") +
   theme_minimal() +
-  scale_fill_brewer(palette = "Set3")
+   scale_fill_viridis_d()
 
 
 #(5.) Plot the relationship between cyl - number of cylinders and displ - engine displacement using geom_point with aesthetic color = engine displacement. Title should be “Relationship between No. of Cylinders and Engine Displacement”.
